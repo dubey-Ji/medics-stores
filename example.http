@@ -1,0 +1,15 @@
+GET http://localhost:8000/api/v1/ping
+
+###
+POST http://localhost:8000/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "name": "ashutosh",
+  "email": "ashd@email.com",
+  "phoneNumber": "1234678991",
+  "password": "1234"
+}
+
+###
+GET http://localhost:8000/api/v1/auth/verify-email/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzaHV0b3NoQGdtYWlsLmNvbSIsImlhdCI6MTcxMTc5NzEzMSwiZXhwIjoxNzExNzk3NDMxfQ.TKTz8wVIeRJbDjH61PjGaQfURPWPeXw_tl6qzxYoJq
