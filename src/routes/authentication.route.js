@@ -1,9 +1,9 @@
 import express from "express";
 import { ApiResponse } from "../utils/api-response.js";
 import { validateData } from "../middlewares/validatedata.middlware.js";
-import { User } from "../models/user.model.js";
+import { User } from "../models/user.models.js";
 import { ApiError } from "../utils/api-error.js";
-import { verifyEmailToken } from "../utils/email.js";
+import { sendEmail, verifyEmailToken } from "../utils/email.util.js";
 
 const router = express.Router();
 
@@ -18,10 +18,17 @@ router.post("/register", validateData, async (req, res) => {
       phoneNumber,
       password,
     });
-    console.log("user", user);
+    const emailVerificaion = await sendEmail({
+      to: email,
+      subject: "Email Verification",
+    });
     res.status(200).json(new ApiResponse(200, [], "true"));
   } catch (error) {
     // throw new ApiError(400, "Something went wrong", error.message);
+    const user = await User.findOne({ email: req.body.email });
+    if (user) {
+      await user.delete();
+    }
     console.error(error);
   }
 });

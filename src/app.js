@@ -1,14 +1,13 @@
-import express from "express";
-import cors from "cors";
-import { config as dotenvConfig } from "dotenv";
-import cookieParser from "cookie-parser";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { join } from "path";
+import { config as dotenvConfig } from "dotenv";
 const APP_PATH = dirname(fileURLToPath(import.meta.url));
-const dotEnvPath = join(APP_PATH, "..", ".env");
-console.log(dotEnvPath);
+const dotEnvPath = join(APP_PATH, "..", `.env.${process.env.NODE_ENV}`);
 dotenvConfig({ path: dotEnvPath });
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express();
 

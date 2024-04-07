@@ -27,6 +27,7 @@ export const sendEmail = async function (options = {}) {
     cc: cc,
     html: "<b>Hello World</b>",
   });
+  return info;
 };
 
 export const generateTokenForEmail = async function (userInfo = {}) {

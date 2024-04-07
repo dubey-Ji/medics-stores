@@ -1,16 +1,24 @@
-import mongoose from "mongoose";
-import { DB_NAME } from "../constants.js";
+import { Sequelize } from "sequelize";
+
+export const sequelize = new Sequelize({
+  database: "medical_store",
+  username: "ashutosh",
+  password: "admin@123",
+  dialect: "mysql",
+});
 
 export const connectDb = async () => {
   try {
-    const connectionInstance = await mongoose.connect(
-      `${process.env.MONGODB_URI}/${DB_NAME}`
-    );
-    console.log(
-      `\n Mongo DB Connected successfully at Host: ${connectionInstance.connection.host}`
-    );
+    await sequelize.authenticate();
+    console.log("Connection has been established successfully");
+    await sequelize.sync({
+      force: false,
+      logging: false,
+      alter: true,
+    });
+    console.log("All models were synchronized successfully.");
   } catch (error) {
-    console.error(`MongoDb connection failed: ${error}`);
+    console.error("\n Unable to connect to database: ", error.message);
     process.exit(1);
   }
 };
