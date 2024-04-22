@@ -74,15 +74,36 @@ router.post("/login", async (req, res) => {
     // create accesstoken and referesh token and share it in response with user data removing its password
     const accesstoken = createAccessToken({ email });
     const refereshToken = createRefereshToken({ email });
-    user.accesstoken = accesstoken;
+    user.accessToken = accesstoken;
     user.refereshToken = refereshToken;
     await user.save();
-    delete user.password;
+    delete user.dataValues.password;
     return res
       .status(200)
       .json(new ApiResponse(200, user, "Login successfully"));
   } catch (error) {
+    console.error(error);
     return res.status(400).json(new ApiError(400, "Something went wrong"));
+  }
+});
+
+router.get("/logout", async (req, res) => {
+  try {
+    console.log("user", req.body.user.email);
+    // const email = req.body.user.email;
+    const email = req.user.email;
+
+    const user = await User.findOne({ where: { email } });
+    user.accessToken = null;
+    user.refereshToken = null;
+    await user.save();
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, "User logout successfully"));
+  } catch (error) {
+    return res
+      .status(401)
+      .json(new ApiError(401, "Something went wrong", error));
   }
 });
 
