@@ -1,11 +1,12 @@
 import { Sequelize } from "sequelize";
-import { config } from "./development.config.js";
+// import { config } from "./development.config.js";
+import { config } from "../config/development-config.js";
 
 export const sequelize = new Sequelize({
-  database: config.database,
-  username: config.user,
-  password: config.password,
-  dialect: config.dialect,
+  database: config.db.database,
+  username: config.db.user,
+  password: config.db.password,
+  dialect: config.db.dialect,
 });
 
 export const connectDb = async () => {
@@ -14,7 +15,7 @@ export const connectDb = async () => {
     console.log("Connection has been established successfully");
     await sequelize.sync({
       force: false,
-      logging: config.logging,
+      logging: config.db.logging,
       alter: true,
     });
     console.log("All models were synchronized successfully.");

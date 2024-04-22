@@ -2,14 +2,14 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { join } from "path";
 import { config as dotenvConfig } from "dotenv";
-const APP_PATH = dirname(fileURLToPath(import.meta.url));
-const dotEnvPath = join(APP_PATH, "..", `.${process.env.NODE_ENV}.env`);
+export const APP_PATH = dirname(fileURLToPath(import.meta.url));
+const dotEnvPath = join(APP_PATH, "..", `.env`);
 dotenvConfig({ path: dotEnvPath });
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-const app = express();
+export const app = express();
 app.use(
   cors({
     origin: "*",
@@ -25,4 +25,4 @@ import router from "./routes/router.js";
 
 app.use("/api/v1", router);
 
-export { app, APP_PATH };
+// export { app, APP_PATH };
