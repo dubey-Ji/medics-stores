@@ -6,6 +6,7 @@ import { ApiError } from "../utils/api-error.js";
 import { sendEmail, verifyEmailToken } from "../utils/email.util.js";
 import { comparePassword, encryptPassword } from "../utils/bcrypt.util.js";
 import { createAccessToken, createRefereshToken } from "../utils/jwt.util.js";
+import { isAuthenticated } from "../middlewares/authentication.middleware.js";
 
 const router = express.Router();
 
@@ -87,12 +88,10 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/logout", async (req, res) => {
+router.get("/logout", isAuthenticated, async (req, res) => {
   try {
-    console.log("user", req.body.user.email);
     // const email = req.body.user.email;
     const email = req.user.email;
-
     const user = await User.findOne({ where: { email } });
     user.accessToken = null;
     user.refereshToken = null;
