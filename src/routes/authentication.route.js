@@ -7,6 +7,8 @@ import { sendEmail, verifyEmailToken } from "../utils/email.util.js";
 import { comparePassword, encryptPassword } from "../utils/bcrypt.util.js";
 import { createAccessToken, createRefereshToken } from "../utils/jwt.util.js";
 import { isAuthenticated } from "../middlewares/authentication.middleware.js";
+import { UserRoleMapping } from "../models/user_role_mapping.models.js";
+import { Role } from "../models/role.models.js";
 
 const router = express.Router();
 
@@ -20,11 +22,16 @@ router.post("/register", validateData, async (req, res) => {
     });
     if (existingUser) throw new ApiError(400, "User already exist");
     const hashPassword = await encryptPassword(password);
-    await User.create({
+    const user = await User.create({
       email,
       name,
       phoneNumber,
       password: hashPassword,
+    });
+    const role = await Role.findOne({ where: { name: "STOREOWNER" } });
+    await UserRoleMapping.create({
+      user_id: user.id,
+      role_id: role.id,
     });
     await sendEmail({
       to: email,
