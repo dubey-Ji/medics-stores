@@ -37,7 +37,7 @@ router.post("/register", validateData, async (req, res) => {
       to: email,
       subject: "Email Verification",
     });
-    res.status(200).json(new ApiResponse(200, [], "true"));
+    return res.status(200).json(new ApiResponse(200, [], "true"));
   } catch (error) {
     console.error(error);
     // throw new ApiError(400, "Something went wrong", error.message);
@@ -45,7 +45,7 @@ router.post("/register", validateData, async (req, res) => {
     if (user) {
       await user.destroy();
     }
-    res.status(400).json(new ApiError(400, error.message));
+    return res.status(400).json(new ApiError(400, error.message));
   }
 });
 
