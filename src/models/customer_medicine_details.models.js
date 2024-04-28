@@ -21,6 +21,10 @@ export const CustomerMedicineDetails = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    total_tablets_remaining: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
   },
   { timestamps: true, tableName: "customer_medicine_details" }
 );
