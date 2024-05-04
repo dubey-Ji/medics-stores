@@ -1,8 +1,6 @@
 import { app } from "../engines/load-engines.js";
 import "../loggers/cron.logger.js";
 import winston from "winston";
-import { process as processToCalculateTabletRemaining } from "../engines/calculate-tablets-remaining.js";
-
 const CronLogger = winston.loggers.get("CronLogger");
 const cronName = "Calculate Tablets Remaining";
 
@@ -15,7 +13,8 @@ function main() {
     //   status: "Started",
     //   cronName,
     // });
-    processToCalculateTabletRemaining()
+    app.engines
+      .calculateTabletsRemaining()
       .then(() => {
         exitWithSuccess();
       })
