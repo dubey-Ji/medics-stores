@@ -30,6 +30,7 @@
     "mysql2": "^3.9.3",
     "nodemailer": "^6.9.13",
     "sequelize": "^6.37.2",
-    "underscore": "^1.13.6"
+    "underscore": "^1.13.6",
+    "winston": "^3.13.0"
   }
 }
