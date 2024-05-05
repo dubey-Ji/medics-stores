@@ -1,6 +1,9 @@
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import { config } from "../config/development-config.js";
+import { readFileSync } from "fs";
+import _ from "underscore";
+
 const transporter = nodemailer.createTransport({
   service: config.mail.service,
   pool: true,
@@ -20,11 +23,12 @@ const transporter = nodemailer.createTransport({
 export const sendEmail = async function (options = {}) {
   const { to, cc, subject } = options;
   const token = await generateTokenForEmail({ email: to });
+  const data = { token };
   const info = await transporter.sendMail({
     from: "support@medicsstores.com",
     to: to,
     subject: subject,
-    html: `<b>Hello World</b><br><h1>Token: ${token}</h1>`,
+    html: getCompiledHtml("./src/templates/verification-email.html", data),
   });
   return info;
 };
@@ -54,3 +58,10 @@ export const verifyEmailToken = async function (token) {
 };
 
 export const readEmail = async function () {};
+
+const getCompiledHtml = (templatePath, data) => {
+  let encoding, templateContent;
+  templateContent = readFileSync(templatePath, (encoding = "utf8"));
+  let templatize = _.template(templateContent);
+  return templatize(data);
+};
