@@ -1,12 +1,10 @@
 import { Sequelize } from "sequelize";
-// import { config } from "./development.config.js";
-import { config } from "../config/development-config.js";
-
 export const sequelize = new Sequelize({
-  database: config.db.database,
-  username: config.db.user,
-  password: config.db.password,
-  dialect: config.db.dialect,
+  database: process.env.DB_DATABASE,
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  dialect: process.env.DB_TYPE,
+  host: process.env.DB_HOST,
 });
 
 export const connectDb = async () => {
@@ -15,13 +13,13 @@ export const connectDb = async () => {
     console.log("Connection has been established successfully");
     await sequelize.sync({
       force: false,
-      logging: config.db.logging,
+      logging: false,
       alter: true,
     });
     console.log("All models were synchronized successfully.");
     return;
   } catch (error) {
-    console.error("\n Unable to connect to database: ", error.message);
+    console.error("\n Unable to connect to database: ", error);
     process.exit(1);
   }
 };
