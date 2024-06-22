@@ -5,11 +5,62 @@ POST http://localhost:8000/api/v1/auth/register
 Content-Type: application/json
 
 {
-  "name": "ashutosh",
-  "email": "ashd@email.com",
+  "name": "harshit",
+  "email": "jharshit034@gmail.com",
   "phoneNumber": "1234678991",
   "password": "1234"
 }
 
 ###
-GET http://localhost:8000/api/v1/auth/verify-email/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzaHV0b3NoQGdtYWlsLmNvbSIsImlhdCI6MTcxMTc5NzEzMSwiZXhwIjoxNzExNzk3NDMxfQ.TKTz8wVIeRJbDjH61PjGaQfURPWPeXw_tl6qzxYoJq
+GET http://localhost:8000/api/v1/auth/verify-email/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzaHV0b3NoYmtkQGdtYWlsLmNvbSIsImlhdCI6MTcxNDg5MzI2OSwiZXhwIjoxNzE0ODkzNTY5fQ.TTKxt7HnquD7W3Hsshxkbbj9LaRHacJh87medbKxv3Q
+
+###
+POST http://localhost:8000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "ashutoshbkd@gmail.com",
+  "password": "1234"
+}
+
+###
+GET http://localhost:8000/api/v1/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzaHV0b3NoYmtkQGdtYWlsLmNvbSIsImlhdCI6MTcxNDEyNzY2MSwiZXhwIjoxNzE0MTMxMjYxfQ.uXkq_YDsG_qJPRXqv3Obz-kgyCjhm_B-0jg6rUiGTJY
+
+###
+GET http://localhost:8000/api/v1/store
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzaHV0b3NoYmtkQGdtYWlsLmNvbSIsImlhdCI6MTcxNDMyNjU2NywiZXhwIjoxNzE0MzMwMTY3fQ.OQlel83LVnedpGsUlK1fakDLtXXAZoVccDYB5ICIxG8
+
+###
+POST http://localhost:8000/api/v1/store
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzaHV0b3NoYmtkQGdtYWlsLmNvbSIsImlhdCI6MTcxNDEyNzY2MSwiZXhwIjoxNzE0MTMxMjYxfQ.uXkq_YDsG_qJPRXqv3Obz-kgyCjhm_B-0jg6rUiGTJY
+Content-Type: application/json
+
+{
+  "name": "Mahadev"
+}
+
+###
+POST http://localhost:8000/api/v1/customer/create-customer
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzaHV0b3NoYmtkQGdtYWlsLmNvbSIsImlhdCI6MTcxNDIwMDk5NCwiZXhwIjoxNzE0MjA0NTk0fQ.UgHa_vI-qfh03av0ybJ7l0dUbtm1lwf-Ht3uyhIvWRk
+Content-Type: application/json
+
+{
+  "email": "kushaw@gmail.com",
+  "name": "Vishal",
+  "phoneNumber": 789456123,
+  "storeId": 1
+}
+
+###
+POST http://localhost:8000/api/v1/customer/customer-details
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzaHV0b3NoYmtkQGdtYWlsLmNvbSIsImlhdCI6MTcxNDIwMDk5NCwiZXhwIjoxNzE0MjA0NTk0fQ.UgHa_vI-qfh03av0ybJ7l0dUbtm1lwf-Ht3uyhIvWRk
+Content-Type: application/json
+
+{
+  "medicineName": "Paracetamol",
+  "customerId": 7,
+  "totalNoOfTablets": 10,
+  "tabletsNoOfWeeks": null,
+  "tabletsNoOfDays": 2
+}
