@@ -1,13 +1,13 @@
 export const config = {
   db: {
     dialect: "mysql",
-    host: "localhost",
+    host: "db",
     port: 3306,
     user: "ashutosh",
-    password: "admin@123",
+    password: "ashutosh@123",
     sync: true,
     logging: false,
-    database: "medical_store",
+    database: "medics_store",
   },
   mail: {
     username: "support@medicsstores.com",
