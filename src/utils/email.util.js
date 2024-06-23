@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { config } from "../config/development-config.js";
 import { readFileSync } from "fs";
 import _ from "underscore";
+import EmailLogger from "../loggers/email.logger.js";
 
 const transporter = nodemailer.createTransport({
   service: config.mail.service,
@@ -21,16 +22,36 @@ const transporter = nodemailer.createTransport({
 });
 
 export const sendEmail = async function (options = {}) {
+  let info;
   const { to, cc, subject } = options;
-  const token = await generateTokenForEmail({ email: to });
-  const data = { token };
-  const info = await transporter.sendMail({
-    from: "support@medicsstores.com",
-    to: to,
-    subject: subject,
-    html: getCompiledHtml("./src/templates/verification-email.html", data),
-  });
-  return info;
+  try {
+    EmailLogger.info({
+      pid: process.pid,
+      status: "Email Process Started",
+      emailData: { to, subject },
+    });
+    const token = await generateTokenForEmail({ email: to });
+    const data = { token };
+    info = await transporter.sendMail({
+      from: "support@medicsstores.com",
+      to: to,
+      subject: subject,
+      html: getCompiledHtml("./src/templates/verification-email.html", data),
+    });
+    EmailLogger.info({
+      pid: process.pid,
+      status: "Email Process Finished",
+      emailData: { to, subject, info },
+    });
+    return info;
+  } catch (error) {
+    EmailLogger.error({
+      pid: process.pid,
+      status: "Email Process Errored",
+      emailData: { to, subject, info },
+      error,
+    });
+  }
 };
 
 export const generateTokenForEmail = async function (userInfo = {}) {
