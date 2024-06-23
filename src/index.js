@@ -1,5 +1,6 @@
 import { app } from "./app.js";
 import { connectDb } from "./db/index.js";
+// import routes
 import router from "./routes/router.js";
 
 connectDb()
