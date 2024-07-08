@@ -70,6 +70,9 @@ router.get("/verify-email/:token", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json(new ApiError(400, "Not a valid data"));
+    }
     const user = await User.findOne({
       where: { email },
     });
