@@ -13,4 +13,10 @@ router.post("/login", Authentication.login);
 
 router.get("/logout", isAuthenticated, Authentication.logout);
 
+router.post(
+  "/send-email-token",
+  isAuthenticated,
+  Authentication.sendTokenToEmail
+);
+
 export default router;

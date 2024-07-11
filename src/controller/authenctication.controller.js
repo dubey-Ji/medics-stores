@@ -6,12 +6,15 @@ import { comparePassword, encryptPassword } from "../utils/bcrypt.util.js";
 import { createAccessToken, createRefereshToken } from "../utils/jwt.util.js";
 import { UserRoleMapping } from "../models/user_role_mapping.models.js";
 import { Role } from "../models/role.models.js";
+import { OnboardType } from "../models/onboard_type.js";
+import { UserOnBoardType } from "../models/user_onboard_type.js";
 
 const Authentication = {};
 
 Authentication.register = async (req, res) => {
   try {
-    const { email, name, phoneNumber, password } = req.body;
+    let { email, name, phoneNumber, password } = req.body;
+    phoneNumber = +phoneNumber;
     const existingUser = await User.findOne({
       where: {
         email,
@@ -30,9 +33,25 @@ Authentication.register = async (req, res) => {
       user_id: user.id,
       role_id: role.id,
     });
+    /* TODO: Will verify the email after the user gets onboarded, will give him an option inside settings
+    option in setting
     await sendEmail({
       to: email,
       subject: "Email Verification",
+    });
+    */
+    // TODO: Test the below onboard configuration
+    const onboardType = await OnboardType.findOne({
+      where: {
+        name: "email",
+      },
+    });
+    if (!onboardType) {
+      throw new ApiError(400, "Not a valid onboard type");
+    }
+    await UserOnBoardType.create({
+      user_id: user.id,
+      onboard_id: onboardType.id,
     });
     return res.status(200).json(new ApiResponse(200, [], "true"));
   } catch (error) {
@@ -92,6 +111,24 @@ Authentication.logout = async (req, res) => {
   } catch (error) {
     return res
       .status(401)
+      .json(new ApiError(401, "Something went wrong", error));
+  }
+};
+
+Authentication.sendTokenToEmail = async (req, res) => {
+  try {
+    const email = req.user.email;
+    await sendEmail({
+      to: email,
+      subject: "Email Verification",
+    });
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, "Verification email has been sent"));
+  } catch (error) {
+    console.error(`\n Error occrued while sending token to email --> ${error}`);
+    return res
+      .status(400)
       .json(new ApiError(401, "Something went wrong", error));
   }
 };

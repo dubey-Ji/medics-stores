@@ -51,6 +51,7 @@ export const sendEmail = async function (options = {}) {
       emailData: { to, subject, info },
       error,
     });
+    throw error;
   }
 };
 
