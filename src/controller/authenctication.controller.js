@@ -53,7 +53,9 @@ Authentication.register = async (req, res) => {
       user_id: user.id,
       onboard_id: onboardType.id,
     });
-    return res.status(200).json(new ApiResponse(200, [], "true"));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, [], "User created successfully"));
   } catch (error) {
     console.error(`\n An error occured while register --> ${error}`);
     // throw new ApiError(400, "Something went wrong", error.message);
