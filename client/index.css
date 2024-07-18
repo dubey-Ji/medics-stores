@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+hr {
+    border: none;
+    border-top: 1px solid #cbd0dd8a;
+    color: #525b75;
+    overflow: visible;
+    text-align: center;
+    height: 5px;
+}
+
+hr::after {
+    background: #F4F7FA;
+    content: 'or use email';
+    padding: 0 0.5rem;
+    position: relative;
+    top: -13px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    white-space: "nowrap";
+}
