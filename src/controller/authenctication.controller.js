@@ -8,6 +8,8 @@ import { UserRoleMapping } from "../models/user_role_mapping.models.js";
 import { Role } from "../models/role.models.js";
 import { OnboardType } from "../models/onboard_type.js";
 import { UserOnBoardType } from "../models/user_onboard_type.js";
+import axios from "axios";
+import qs from "qs";
 
 const Authentication = {};
 
@@ -151,6 +153,83 @@ Authentication.verifyEmailToken = async (req, res) => {
     return res.status(200).json(new ApiResponse(200, [], "Email is valid"));
   } catch (error) {
     console.error(`\n Error occured while verifying email ${error.message}`);
+    return res.status(400).json(new ApiError(400, "Something went wrong"));
+  }
+};
+
+Authentication.googleOauthRegisteration = async (req, res) => {
+  const code = req.body.code;
+
+  try {
+    const response = await axios.post(
+      process.env.GOOGLE_TOKEN_URI,
+      qs.stringify({
+        code,
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET,
+        redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+        grant_type: "authorization_code",
+      })
+    );
+    const tokenResponse = response;
+    const { access_token } = tokenResponse.data;
+
+    const userInfoResponse = await axios.get(process.env.GOOGLE_USER_INFO_URI, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    const body = userInfoResponse.data;
+    const userExist = await User.findOne({
+      where: {
+        email: body.email,
+      },
+    });
+    if (userExist)
+      return res.status(400).json(new ApiError(400, "User already exist"));
+    const user = await User.create({
+      email: body.email,
+      name: body.name,
+      phoneNumber: 91,
+      isEmailVerified: body.verified_email,
+    });
+    const role = await Role.findOne({ where: { name: "STOREOWNER" } });
+    await UserRoleMapping.create({
+      user_id: user.id,
+      role_id: role.id,
+    });
+    const onboardType = await OnboardType.findOne({
+      where: {
+        name: "google",
+      },
+    });
+
+    if (!onboardType) {
+      throw new ApiError(400, "Not a valid onboard type");
+    }
+    await UserOnBoardType.create({
+      user_id: user.id,
+      onboard_id: onboardType.id,
+    });
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        {
+          path: "/login",
+        },
+        "User created successfully"
+      )
+    );
+  } catch (error) {
+    console.error(
+      `\n Error occured while registering user with google oauth --> ${error}`
+    );
+    const user = await User.findOne({
+      where: { email: req.body.email },
+    });
+    if (user) {
+      await user.destroy();
+    }
     return res.status(400).json(new ApiError(400, "Something went wrong"));
   }
 };
