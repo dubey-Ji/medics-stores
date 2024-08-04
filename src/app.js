@@ -6,12 +6,13 @@ export const APP_PATH = dirname(fileURLToPath(import.meta.url));
 const dotEnvPath = join(APP_PATH, "..", `.env.sample`);
 dotenvConfig({ path: dotEnvPath });
 import express from "express";
-import cors from "cors";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 export const app = express();
 app.use(
   cors({
     origin: "*",
+    credentials: true,
   })
 );
 
