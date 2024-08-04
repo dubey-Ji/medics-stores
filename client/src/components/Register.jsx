@@ -5,6 +5,11 @@ import { Link } from "react-router-dom";
 import CustomSnackbar from "./CustomSnackbar";
 import useUserRegisterationDataValidation from "../utils/useUserRegisterationDataValidation";
 import { useNavigate } from "react-router-dom";
+import {
+  GOOGLE_REDIRECT_URI,
+  GOOGLE_SCOPE,
+  GOOGLE_CLIENT_ID,
+} from "../utils/constant";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -66,6 +71,12 @@ const Register = () => {
     navigate("/login");
     return;
   };
+  const handleGoogleRegisteration = async (e) => {
+    const redirectURI = GOOGLE_REDIRECT_URI;
+    const scope = GOOGLE_SCOPE;
+    localStorage.setItem("isRegisterationProcess", true);
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${redirectURI}&response_type=code&scope=${scope}`;
+  };
   return (
     <>
       <div className="register-container h-screen w-screen bg-[#F4F7FA] box-border">
@@ -79,7 +90,10 @@ const Register = () => {
             </p>
           </div>
           <div className="social-media-login flex flex-col border-5 w-[100%]">
-            <button className="border-2 mb-[16px] py-[10px] px-[24px] hover:bg-[#e3e6ed] border-[#e3e6ed] rounded-[0.375rem] bg-[#f5f7fa] text-[0.8rem] flex justify-center cursor-pointer">
+            <button
+              className="border-2 mb-[16px] py-[10px] px-[24px] hover:bg-[#e3e6ed] border-[#e3e6ed] rounded-[0.375rem] bg-[#f5f7fa] text-[0.8rem] flex justify-center cursor-pointer"
+              onClick={handleGoogleRegisteration}
+            >
               <FaGoogle className="mt-[4px] mr-[10px]" />
               Sign up with google
             </button>
