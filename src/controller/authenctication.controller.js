@@ -75,17 +75,46 @@ Authentication.login = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).json(new ApiError(400, "Not a valid data"));
+      return res
+        .status(401)
+        .json(new ApiError(401, "Not a valid data", [], false));
     }
     const user = await User.findOne({
       where: { email },
     });
-    if (!user) return res.status(400).json(new ApiError(400, "No user found"));
+    if (!user)
+      return res
+        .status(401)
+        .json(new ApiError(401, "No user found", [], false));
+    const userOnBoardType = await UserOnBoardType.findOne({
+      where: {
+        user_id: user.id,
+      },
+    });
+    if (!userOnBoardType) {
+      return res
+        .status(401)
+        .json(new ApiError(401, "Something went wrong", [], false));
+    }
+    const onBoardType = await OnboardType.findOne({
+      where: {
+        id: userOnBoardType.onboard_id,
+      },
+    });
+    if (!onBoardType) {
+      return res
+        .status(401)
+        .json(new ApiError(401, "Something went wrong", [], false));
+    }
+    if (onBoardType.name !== "email")
+      return res
+        .status(401)
+        .json(new ApiError(401, "Not a valid login", [], false));
     const isPasswordCorrect = await comparePassword(user.password, password);
     if (!isPasswordCorrect)
       return res
         .status(401)
-        .json(new ApiError(401, "Please provide correct data"));
+        .json(new ApiError(401, "Please provide correct data", [], false));
     // create accesstoken and referesh token and share it in response with user data removing its password
     const accesstoken = createAccessToken({ email });
     const refereshToken = createRefereshToken({ email });
@@ -93,12 +122,24 @@ Authentication.login = async (req, res) => {
     user.refereshToken = refereshToken;
     await user.save();
     delete user.dataValues.password;
+    res.cookie("authToken", accesstoken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    });
     return res
       .status(200)
-      .json(new ApiResponse(200, user, "Login successfully"));
+      .json(
+        new ApiResponse(
+          200,
+          { user: user, path: "/home" },
+          "Login successfully"
+        )
+      );
   } catch (error) {
     console.error(`\n An error occured while login --> ${error}`);
-    return res.status(400).json(new ApiError(400, "Something went wrong"));
+    return res
+      .status(401)
+      .json(new ApiError(401, "Something went wrong", [], false));
   }
 };
 
@@ -109,9 +150,15 @@ Authentication.logout = async (req, res) => {
     user.accessToken = null;
     user.refereshToken = null;
     await user.save();
+    res.clearCookie("authToken", {
+      httpOnly: true,
+      secure: false,
+    });
     return res
       .status(200)
-      .json(new ApiResponse(200, null, "User logout successfully"));
+      .json(
+        new ApiResponse(200, { path: "/login" }, "User logout successfully")
+      );
   } catch (error) {
     return res
       .status(401)
@@ -230,6 +277,67 @@ Authentication.googleOauthRegisteration = async (req, res) => {
     if (user) {
       await user.destroy();
     }
+    return res.status(400).json(new ApiError(400, "Something went wrong"));
+  }
+};
+
+Authentication.googleOauthLogin = async (req, res) => {
+  const code = req.body.code;
+
+  try {
+    const response = await axios.post(
+      process.env.GOOGLE_TOKEN_URI,
+      qs.stringify({
+        code,
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET,
+        redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+        grant_type: "authorization_code",
+      })
+    );
+    const tokenResponse = response;
+    const { access_token } = tokenResponse.data;
+
+    const userInfoResponse = await axios.get(process.env.GOOGLE_USER_INFO_URI, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    const body = userInfoResponse.data;
+    const userExist = await User.findOne({
+      where: {
+        email: body.email,
+      },
+    });
+    if (!userExist) {
+      return res.status(400).json(new ApiError(400, "User not found"));
+    }
+
+    const accesstoken = createAccessToken({ email: body.email });
+    const refereshToken = createRefereshToken({ email: body.email });
+    userExist.accessToken = accesstoken;
+    userExist.refereshToken = refereshToken;
+    res.cookie("authToken", accesstoken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    });
+    await userExist.save();
+    delete userExist.dataValues.password;
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { user: userExist, path: "/home" },
+          "Login successfully"
+        )
+      );
+  } catch (error) {
+    console.error(
+      `\n Error occured while login user with google oauth --> ${error}`
+    );
     return res.status(400).json(new ApiError(400, "Something went wrong"));
   }
 };
