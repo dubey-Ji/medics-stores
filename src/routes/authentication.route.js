@@ -13,7 +13,12 @@ router.post("/login", Authentication.login);
 
 router.get("/logout", isAuthenticated, Authentication.logout);
 
-router.post("/oauth2/callback", Authentication.googleOauthRegisteration);
+router.post(
+  "/oauth2/register/callback",
+  Authentication.googleOauthRegisteration
+);
+
+router.post("/oauth2/login/callback", Authentication.googleOauthLogin);
 
 router.post(
   "/send-email-token",
