@@ -31,7 +31,8 @@ export const sendEmail = async function (options = {}) {
       emailData: { to, subject },
     });
     const token = await generateTokenForEmail({ email: to });
-    const data = { token };
+    const tokenData = { token };
+    const data = { ...options, ...tokenData };
     info = await transporter.sendMail({
       from: "support@medicsstores.com",
       to: to,
