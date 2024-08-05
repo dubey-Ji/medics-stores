@@ -4,6 +4,9 @@ import { config } from "../config/development-config.js";
 import { readFileSync } from "fs";
 import _ from "underscore";
 import EmailLogger from "../loggers/email.logger.js";
+import { EMAIL_TEMPLATE_HTML_FILE_PATH } from "../constants.js";
+import { APP_PATH } from "../app.js";
+import { join } from "path";
 
 const transporter = nodemailer.createTransport({
   service: config.mail.service,
@@ -21,7 +24,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendEmail = async function (options = {}) {
+export const sendEmail = async function (options = {}, templateOptions = {}) {
   let info;
   const { to, cc, subject } = options;
   try {
@@ -32,12 +35,13 @@ export const sendEmail = async function (options = {}) {
     });
     const token = await generateTokenForEmail({ email: to });
     const tokenData = { token };
-    const data = { ...options, ...tokenData };
+    const data = { ...templateOptions, ...tokenData };
+    const filePath = fetchTemplatePath(options.fileType);
     info = await transporter.sendMail({
       from: "support@medicsstores.com",
       to: to,
       subject: subject,
-      html: getCompiledHtml("./src/templates/verification-email.html", data),
+      html: getCompiledHtml(filePath, data),
     });
     EmailLogger.info({
       pid: process.pid,
@@ -87,4 +91,12 @@ const getCompiledHtml = (templatePath, data) => {
   templateContent = readFileSync(templatePath, (encoding = "utf8"));
   let templatize = _.template(templateContent);
   return templatize(data);
+};
+
+const fetchTemplatePath = (type) => {
+  const typeData = EMAIL_TEMPLATE_HTML_FILE_PATH.filter((template) => {
+    return template.type === type;
+  })[0];
+  console.log(join(APP_PATH, typeData.path));
+  return join(APP_PATH, typeData.path);
 };
