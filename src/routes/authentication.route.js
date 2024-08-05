@@ -20,6 +20,8 @@ router.post(
 
 router.post("/oauth2/login/callback", Authentication.googleOauthLogin);
 
+router.post("/forgot-password", Authentication.forgotPassword);
+
 router.post(
   "/send-email-token",
   isAuthenticated,
