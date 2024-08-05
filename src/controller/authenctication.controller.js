@@ -172,6 +172,7 @@ Authentication.sendTokenToEmail = async (req, res) => {
     await sendEmail({
       to: email,
       subject: "Email Verification",
+      fileType: "verification-email",
     });
     return res
       .status(200)
@@ -338,6 +339,35 @@ Authentication.googleOauthLogin = async (req, res) => {
     console.error(
       `\n Error occured while login user with google oauth --> ${error}`
     );
+    return res.status(400).json(new ApiError(400, "Something went wrong"));
+  }
+};
+
+Authentication.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body.email;
+    if (!email) {
+      return res
+        .status(401)
+        .json(new ApiError(401, "Not a valid data", [], false));
+    }
+    const userExist = await User.findOne({
+      where: {
+        email: email,
+      },
+    });
+    if (!userExist) {
+      return res
+        .status(401)
+        .json(new ApiError(401, "No user found", [], false));
+    }
+    await sendEmail({
+      to: email,
+      subject: "Reset Your Password",
+    });
+    // TODO: Still need to finish.
+  } catch (error) {
+    console.error(`\n Error occured while forgot password --> ${error}`);
     return res.status(400).json(new ApiError(400, "Something went wrong"));
   }
 };
