@@ -34,6 +34,11 @@ export const Product = sequelize.define(
       type: DataTypes.DECIMAL,
       allowNull: false,
     },
+    unique_id: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
     vendors_id: {
       type: DataTypes.TINYINT,
       allowNull: false,
