@@ -22,6 +22,18 @@ export const Product = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    stock: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+    },
+    vendor_price: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+    },
+    price: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+    },
     vendors_id: {
       type: DataTypes.TINYINT,
       allowNull: false,
