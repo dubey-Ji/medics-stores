@@ -4,11 +4,37 @@ import { Vendors } from "../models/vendors.models.js";
 import { ProductStoreMapping } from "../models/product_store_mapping.js";
 import { ApiError } from "../utils/api-error.js";
 import { ApiResponse } from "../utils/api-response.js";
+import _ from "underscore";
 
 const Product = {};
 
 Product.fetchProducts = async (req, res) => {
   try {
+    const { storeId } = req.query;
+    const productStoreMapping = await ProductStoreMapping.findAll({
+      where: {
+        store_id: storeId,
+      },
+    });
+    if (productStoreMapping.length === 0) {
+      console.log(`\n No product found`);
+      return res
+        .status(200)
+        .json(new ApiResponse(200, null, "No Product found"));
+    }
+    const productIds = _.pluck(productStoreMapping, "product_id");
+    const products = await ProductModel.findAll({
+      where: {
+        id: productIds,
+      },
+    });
+    if (products.length === 0) {
+      console.log(
+        `\n No product found even after having product id in product store mapping`
+      );
+      return res.status(400).json(new ApiError(400, "Something went wrong"));
+    }
+    return res.status(200).json(new ApiResponse(200, products, "Product list"));
   } catch (error) {
     console.error(`\n Error occured while fetching the products --> ${error}`);
     return res.status(400).json(new ApiError(400, "Something went wrong"));

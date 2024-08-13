@@ -6,6 +6,6 @@ const router = Router();
 
 router.post("/add-product", isAuthenticated, Product.addProducts);
 
-router.get("fetch-product", isAuthenticated, Product.fetchProducts);
+router.get("/fetch-product", isAuthenticated, Product.fetchProducts);
 
 export default router;
