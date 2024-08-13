@@ -85,7 +85,7 @@ const Register = () => {
             <h1 className="text-[1.5625rem] leading-4 mb-[0.25rem] text-center font-[800] font-[ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji]">
               Sign Up
             </h1>
-            <p className="text-[#525B75] text-center leading-6 pb-[16px] pt-[10px] font-[Nunito Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol] font-[1rem] font-[400]">
+            <p className="text-[#525B75] text-center leading-6 pb-[16px] pt-[10px] font-[Nunito Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol] font-[400]">
               Create your account today
             </p>
           </div>
