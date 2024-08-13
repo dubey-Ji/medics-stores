@@ -1,0 +1,110 @@
+import { Category } from "../models/category.models.js";
+import { Product as ProductModel } from "../models/product.models.js";
+import { Vendors } from "../models/vendors.models.js";
+import { ProductStoreMapping } from "../models/product_store_mapping.js";
+import { ApiError } from "../utils/api-error.js";
+import { ApiResponse } from "../utils/api-response.js";
+
+const Product = {};
+
+Product.fetchProducts = async (req, res) => {
+  try {
+  } catch (error) {
+    console.error(`\n Error occured while fetching the products --> ${error}`);
+    return res.status(400).json(new ApiError(400, "Something went wrong"));
+  }
+};
+
+Product.addProducts = async (req, res) => {
+  try {
+    const {
+      name,
+      title,
+      description,
+      category,
+      vendor,
+      stock,
+      vendorPrice,
+      price,
+      storeId,
+    } = req.body;
+    if (
+      !name ||
+      !title ||
+      !description ||
+      !category ||
+      !vendor ||
+      !stock ||
+      !vendorPrice ||
+      !price ||
+      !storeId
+    ) {
+      return res.status(400).json(new ApiError(400, "All fields are required"));
+    }
+    const tags = req.body.tags;
+    const existingCategory = await Category.findOne({
+      where: {
+        name: category,
+      },
+      attributes: ["id"],
+    });
+
+    if (!existingCategory) {
+      console.log(`\n No category found for product`);
+      return res.status(400).json(new ApiError(400, "No category found"));
+    }
+    const existingVendor = await Vendors.findOne({
+      where: {
+        name: vendor,
+      },
+      attributes: ["id"],
+    });
+
+    if (!existingVendor) {
+      console.log(`\n No Vendor found`);
+      return res.status(400).json(new ApiError(400, "No vendor found"));
+    }
+    const uniqueId = name + "-" + existingVendor.id + "-" + existingCategory.id;
+    const existingProduct = await ProductModel.findOne({
+      where: {
+        unique_id: uniqueId,
+      },
+    });
+
+    if (existingProduct) {
+      console.log(`\n Product already exist`);
+      return res.status(400).json(new ApiError(400, "Product all ready exist"));
+    }
+    await ProductModel.create({
+      name: name,
+      title,
+      description,
+      vendors_id: existingVendor.id,
+      category_id: existingCategory.id,
+      stock,
+      vendor_price: vendorPrice,
+      price,
+      unique_id: uniqueId,
+      is_active: true,
+      tags: tags || null,
+    });
+    const product = await ProductModel.findOne({
+      where: {
+        unique_id: uniqueId,
+      },
+    });
+
+    await ProductStoreMapping.create({
+      store_id: storeId,
+      product_id: product.id,
+    });
+    return res
+      .status(200)
+      .json(new ApiResponse(200, product, "Product created successfully"));
+  } catch (error) {
+    console.error(`\n Error occured while fetching the products --> ${error}`);
+    return res.status(400).json(new ApiError(400, "Something went wrong"));
+  }
+};
+
+export default Product;
