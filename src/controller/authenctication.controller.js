@@ -92,6 +92,7 @@ Authentication.login = async (req, res) => {
       },
     });
     if (!userOnBoardType) {
+      console.log(`\n Not valid login no user onboard type found`);
       return res
         .status(401)
         .json(new ApiError(401, "Something went wrong", [], false));
@@ -102,6 +103,7 @@ Authentication.login = async (req, res) => {
       },
     });
     if (!onBoardType) {
+      console.log(`\n Not valid login no onboard type found`);
       return res
         .status(401)
         .json(new ApiError(401, "Something went wrong", [], false));
