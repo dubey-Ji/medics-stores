@@ -39,27 +39,17 @@ export const Product = sequelize.define(
       allowNull: false,
       unique: true,
     },
-    vendors_id: {
-      type: DataTypes.TINYINT,
-      allowNull: false,
-      references: {
-        key: "id",
-        model: Vendors,
-      },
-    },
-    category_id: {
-      type: DataTypes.TINYINT,
-      allowNull: false,
-      references: {
-        key: "id",
-        model: Category,
-      },
+    tags: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   { timestamps: true, tableName: "product" }
 );
 
-Product.belongsTo(Vendors);
-Product.belongsTo(Category);
-Category.hasMany(Product);
-Vendors.hasMany(Product);
+Product.belongsTo(Vendors, {
+  foreignKey: "vendors_id",
+});
+Product.belongsTo(Category, {
+  foreignKey: "category_id",
+});
