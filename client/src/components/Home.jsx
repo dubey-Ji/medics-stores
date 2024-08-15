@@ -51,7 +51,7 @@ const Home = () => {
         throw error;
       }
     };
-    fetchPingPong();
+    // fetchPingPong();
   }, []);
   const hanldeOnLogout = () => {
     const hitTheAPI = async () => {
@@ -77,16 +77,18 @@ const Home = () => {
   };
   return (
     <>
-      <h1>Hello from Home</h1>
-      <button onClick={hanldeOnLogout}>Logout</button>
-      {showSnackbar ? (
-        <CustomSnackbar
-          message={snackbarState.message}
-          sucess={snackbarState.success}
-        />
-      ) : (
-        <></>
-      )}
+      <div>
+        <h1>Hello from Home</h1>
+        <button onClick={hanldeOnLogout}>Logout</button>
+        {showSnackbar ? (
+          <CustomSnackbar
+            message={snackbarState.message}
+            sucess={snackbarState.success}
+          />
+        ) : (
+          <></>
+        )}
+      </div>
     </>
   );
 };

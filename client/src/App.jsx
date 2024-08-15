@@ -6,6 +6,7 @@ import Login from "./components/Login";
 import Oauth2Callback from "./components/Oauth2Callback";
 import ForgotPassword from "./components/Forgotpassword";
 import Home from "./components/Home";
+import AppLayout from "./components/AppLayout";
 
 const router = createBrowserRouter([
   {
@@ -22,7 +23,13 @@ const router = createBrowserRouter([
   },
   {
     path: "/home",
-    element: <Home />,
+    element: <AppLayout />,
+    children: [
+      {
+        path: "/home",
+        element: <Home />,
+      },
+    ],
   },
   {
     path: "/oauth2/callback",
