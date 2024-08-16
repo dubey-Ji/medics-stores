@@ -12,19 +12,19 @@ export const Role = sequelize.define(
   { timestamps: true, tableName: "role" }
 );
 
-Role.afterSync(async (options) => {
-  const ROLES = [
-    {
-      name: "STOREOWNER",
-    },
-    {
-      name: "CUSTOMER",
-    },
-  ];
-  const count = await Role.count();
-  if (count !== ROLES.length) {
-    await Role.truncate();
-    await Role.bulkCreate(ROLES);
-  }
-});
+// Role.afterSync(async (options) => {
+//   const ROLES = [
+//     {
+//       name: "STOREOWNER",
+//     },
+//     {
+//       name: "CUSTOMER",
+//     },
+//   ];
+//   const count = await Role.count();
+//   if (count !== ROLES.length) {
+//     await Role.truncate();
+//     await Role.bulkCreate(ROLES);
+//   }
+// });
 // main()
