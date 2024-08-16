@@ -11,3 +11,21 @@ export const OnboardType = sequelize.define(
   },
   { timestamps: true, tableName: "onboard_type" }
 );
+OnboardType.afterSync(async (options) => {
+  const types = [
+    {
+      name: "google",
+    },
+    {
+      name: "facebook",
+    },
+    {
+      name: "email",
+    },
+  ];
+  const count = await OnboardType.count();
+  if (count !== types.length) {
+    await OnboardType.truncate();
+    await OnboardType.bulkCreate(types);
+  }
+});
