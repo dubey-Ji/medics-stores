@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import RichTextEditor from "./RichTextEditor";
 import FeatherIcon from "feather-icons-react";
 import axios from "axios";
+import CustomSnackbar from "./CustomSnackbar";
 
 const AddProduct = function () {
   const [activeTab, setActiveTab] = useState("pricing");
@@ -24,6 +25,18 @@ const AddProduct = function () {
     useState("vendor");
   const [newVendor, setNewVendor] = useState("");
   const [newCategory, setNewCategory] = useState("");
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarState, setSnackbarState] = useState({
+    success: true,
+    message: "",
+  });
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowSnackbar(false);
+      setSnackbarState({ message: "" });
+    }, 1200);
+  }, [showSnackbar]);
 
   // Fetch categories, vendors, tags
   const fetchCategories = async () => {
@@ -34,7 +47,6 @@ const AddProduct = function () {
         withCredentials: true,
       });
       if (resp.data.success) {
-        console.log("inside success");
         setCategories(resp.data.data);
       }
     } catch (error) {
@@ -93,6 +105,19 @@ const AddProduct = function () {
           name: newVendor,
         },
       });
+      if (resp.data.success) {
+        setShowSnackbar(true);
+        setSnackbarState({
+          success: resp.data.success,
+          message: resp.data.message,
+        });
+      } else {
+        setShowSnackbar(false);
+        setSnackbarState({
+          success: false,
+          message: resp.data.message,
+        });
+      }
       fetchVendors();
       console.log("resp", resp);
       setNewVendor("");
@@ -125,7 +150,19 @@ const AddProduct = function () {
           name: newCategory,
         },
       });
-      console.log("resp", resp);
+      if (resp.data.success) {
+        setShowSnackbar(true);
+        setSnackbarState({
+          success: resp.data.success,
+          message: resp.data.message,
+        });
+      } else {
+        setShowSnackbar(false);
+        setSnackbarState({
+          success: false,
+          message: resp.data.message,
+        });
+      }
       fetchCategories();
       setNewCategory("");
     } catch (error) {
@@ -178,7 +215,19 @@ const AddProduct = function () {
           status: "publish",
         },
       });
-      console.log("resp of add product", resp);
+      if (resp.data.success) {
+        setShowSnackbar(true);
+        setSnackbarState({
+          success: resp.data.success,
+          message: resp.data.message,
+        });
+      } else {
+        setShowSnackbar(false);
+        setSnackbarState({
+          success: false,
+          message: resp.data.message,
+        });
+      }
     } catch (error) {
       if (error.response) {
         console.log("error", error);
@@ -529,6 +578,14 @@ const AddProduct = function () {
           </div>
         </div>
       </div>
+      {showSnackbar ? (
+        <CustomSnackbar
+          message={snackbarState.message}
+          sucess={snackbarState.success}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
