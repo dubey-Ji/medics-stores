@@ -53,9 +53,9 @@ Product.addProducts = async (req, res) => {
       vendorPrice,
       price,
       storeId,
+      status,
     } = req.body;
     if (
-      !name ||
       !title ||
       !description ||
       !category ||
@@ -63,7 +63,8 @@ Product.addProducts = async (req, res) => {
       !stock ||
       !vendorPrice ||
       !price ||
-      !storeId
+      !storeId ||
+      !status
     ) {
       return res.status(400).json(new ApiError(400, "All fields are required"));
     }
@@ -113,6 +114,7 @@ Product.addProducts = async (req, res) => {
       unique_id: uniqueId,
       is_active: true,
       tags: tags || null,
+      status,
     });
     const product = await ProductModel.findOne({
       where: {

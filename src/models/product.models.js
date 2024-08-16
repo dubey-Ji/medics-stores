@@ -8,7 +8,7 @@ export const Product = sequelize.define(
   {
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     is_active: {
       type: DataTypes.BOOLEAN,
@@ -42,6 +42,10 @@ export const Product = sequelize.define(
     tags: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    status: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
   },
   { timestamps: true, tableName: "product" }
