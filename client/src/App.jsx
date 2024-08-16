@@ -7,6 +7,7 @@ import Oauth2Callback from "./components/Oauth2Callback";
 import ForgotPassword from "./components/Forgotpassword";
 import Home from "./components/Home";
 import AppLayout from "./components/AppLayout";
+import AddProduct from "./components/AddProduct";
 
 const router = createBrowserRouter([
   {
@@ -22,12 +23,16 @@ const router = createBrowserRouter([
     element: <ForgotPassword />,
   },
   {
-    path: "/home",
+    path: "/",
     element: <AppLayout />,
     children: [
       {
-        path: "/home",
+        path: "/dashboard",
         element: <Home />,
+      },
+      {
+        path: "/add-product",
+        element: <AddProduct />,
       },
     ],
   },
