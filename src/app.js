@@ -3,7 +3,7 @@ import { fileURLToPath } from "url";
 import { join } from "path";
 import { config as dotenvConfig } from "dotenv";
 export const APP_PATH = dirname(fileURLToPath(import.meta.url));
-const dotEnvPath = join(APP_PATH, "..", `.env.sample`);
+const dotEnvPath = join(APP_PATH, "..", `.development.env`);
 dotenvConfig({ path: dotEnvPath });
 import express from "express";
 import cookieParser from "cookie-parser";
@@ -11,7 +11,7 @@ import cors from "cors";
 export const app = express();
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:1234/",
     credentials: true,
   })
 );
