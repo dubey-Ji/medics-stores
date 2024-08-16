@@ -15,6 +15,7 @@ const Sidebar = function () {
               onClick={() => {
                 setSelectedMenu(item.path);
               }}
+              key={item.path}
             >
               <Link className="flex" to={item.path}>
                 <FeatherIcon
