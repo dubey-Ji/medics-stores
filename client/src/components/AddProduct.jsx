@@ -221,11 +221,103 @@ const AddProduct = function () {
           success: resp.data.success,
           message: resp.data.message,
         });
+        setProduct({
+          title: "",
+          description: "",
+          category: "",
+          vendor: "",
+          tags: "",
+          vendorPrice: "",
+          sellPrice: "",
+          stock: 0,
+        });
       } else {
         setShowSnackbar(false);
         setSnackbarState({
           success: false,
           message: resp.data.message,
+        });
+        setProduct({
+          title: "",
+          description: "",
+          category: "",
+          vendor: "",
+          tags: "",
+          vendorPrice: "",
+          sellPrice: "",
+          stock: 0,
+        });
+      }
+    } catch (error) {
+      if (error.response) {
+        console.log("error", error);
+        return;
+      } else if (error.request) {
+        console.error(
+          `Error occured while fetching categories --> No response received from server`
+        );
+        return;
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error(`Error occurred while login --> ${error.message}`);
+        return;
+      }
+    }
+  };
+
+  const handleSaveDraft = async () => {
+    try {
+      const resp = await axios.request({
+        method: "POST",
+        url: `${process.env.REACT_APP_SERVER_URI}/product/add-product`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+        data: {
+          name: null,
+          title: product.title,
+          description: product.description,
+          category: product.category,
+          vendor: product.vendor,
+          stock: product.stock,
+          vendorPrice: product.vendorPrice,
+          price: product.sellPrice,
+          storeId: 1,
+          status: "draft",
+        },
+      });
+      if (resp.data.success) {
+        setShowSnackbar(true);
+        setSnackbarState({
+          success: resp.data.success,
+          message: resp.data.message,
+        });
+        setProduct({
+          title: "",
+          description: "",
+          category: "",
+          vendor: "",
+          tags: "",
+          vendorPrice: "",
+          sellPrice: "",
+          stock: 0,
+        });
+      } else {
+        setShowSnackbar(false);
+        setSnackbarState({
+          success: false,
+          message: resp.data.message,
+        });
+        setProduct({
+          title: "",
+          description: "",
+          category: "",
+          vendor: "",
+          tags: "",
+          vendorPrice: "",
+          sellPrice: "",
+          stock: 0,
         });
       }
     } catch (error) {
@@ -277,6 +369,7 @@ const AddProduct = function () {
           </button>
           <button
             type="button"
+            onClick={handleSaveDraft}
             className="cursor-pointer px-[1.5rem] py-[0.625rem] mr-[0.5rem] text-[0.8rem] font-[500] text-[#3874ff] bg-[#f5f7fa] border-[#e3e6ed] hover:border-[#e6e9ef] hover:bg-[#e3e6ed] hover:text-[#004dff] rounded-[0.375rem] border-[1px] leading-5"
           >
             Save draft
