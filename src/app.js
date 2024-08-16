@@ -11,7 +11,7 @@ import cors from "cors";
 export const app = express();
 app.use(
   cors({
-    origin: "http://localhost:1234",
+    origin: process.env.REACT_APP_URI,
     credentials: true,
   })
 );
