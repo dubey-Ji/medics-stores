@@ -1,19 +1,17 @@
 // RichTextEditor.js
-import React, { useState } from "react";
+import React from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Import the Quill styles
 
-const RichTextEditor = () => {
-  const [editorHtml, setEditorHtml] = useState("");
-
-  const handleChange = (html) => {
-    setEditorHtml(html);
+const RichTextEditor = ({ product, handleEditorChange }) => {
+  const handleChange = (content) => {
+    handleEditorChange(content);
   };
 
   return (
     <div className="custom-quill">
       <ReactQuill
-        value={editorHtml}
+        value={product.description}
         onChange={handleChange}
         modules={RichTextEditor.modules}
         formats={RichTextEditor.formats}
