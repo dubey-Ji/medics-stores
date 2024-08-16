@@ -5,11 +5,6 @@ import { Link } from "react-router-dom";
 import CustomSnackbar from "./CustomSnackbar";
 import useUserRegisterationDataValidation from "../utils/useUserRegisterationDataValidation";
 import { useNavigate } from "react-router-dom";
-import {
-  GOOGLE_REDIRECT_URI,
-  GOOGLE_SCOPE,
-  GOOGLE_CLIENT_ID,
-} from "../utils/constant";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -72,10 +67,10 @@ const Register = () => {
     return;
   };
   const handleGoogleRegisteration = async (e) => {
-    const redirectURI = GOOGLE_REDIRECT_URI;
-    const scope = GOOGLE_SCOPE;
+    const redirectURI = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
+    const scope = process.env.REACT_APP_GOOGLE_SCOPE;
     localStorage.setItem("isRegisterationProcess", true);
-    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${redirectURI}&response_type=code&scope=${scope}`;
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.REACT_APP_GOOGLE_CLIENT_ID}&redirect_uri=${redirectURI}&response_type=code&scope=${scope}`;
   };
   return (
     <>
