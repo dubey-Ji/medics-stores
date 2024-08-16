@@ -4,11 +4,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CustomSnackbar from "./CustomSnackbar";
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-  GOOGLE_REDIRECT_URI,
-  GOOGLE_SCOPE,
-  GOOGLE_CLIENT_ID,
-} from "../utils/constant";
 import axios from "axios";
 
 const Login = () => {
@@ -178,14 +173,14 @@ const Login = () => {
               />
               {passwordType === "password" ? (
                 <IoIosEyeOff
-                  className="relative bottom-6 left-[28rem]"
+                  className="relative bottom-6 left-[36rem]"
                   onClick={() => {
                     setPasswordType("text");
                   }}
                 />
               ) : (
                 <IoIosEye
-                  className="relative bottom-6 left-[28rem]"
+                  className="relative bottom-6 left-[36rem]"
                   onClick={() => {
                     setPasswordType("password");
                   }}
