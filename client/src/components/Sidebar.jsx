@@ -16,7 +16,7 @@ const Sidebar = function () {
                 setSelectedMenu(item.path);
               }}
             >
-              <Link className="flex">
+              <Link className="flex" to={item.path}>
                 <FeatherIcon
                   icon={item.icon}
                   size="16"
