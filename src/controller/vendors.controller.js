@@ -27,28 +27,10 @@ Vendors.add = async (req, res) => {
 
 Vendors.fetch = async (req, res) => {
   try {
-    const { storeId } = req.query;
-    const productStoreMapping = await ProductStoreMapping.findAll({
-      where: {
-        store_id: storeId,
-      },
-    });
-    if (!productStoreMapping) {
-      console.log(
-        `\n No product store mapping found for given store id -> ${storeId}`
-      );
-      return res.status(200).json(new ApiResponse(200, null, "No data found"));
-    }
-    const productsIds = _.pluck(productStoreMapping, "product_id");
-    const products = await Product.findAll({
-      where: {
-        id: productsIds,
-      },
-    });
-    const uniqueVendorsId = _.unique(_.pluck(products, "vendors_id"));
+    console.log("inisde vendors fetch");
     const vendors = await VendorsModel.findAll({
       where: {
-        id: uniqueVendorsId,
+        is_active: true,
       },
     });
     if (!vendors) {
