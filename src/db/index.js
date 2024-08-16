@@ -14,7 +14,6 @@ export const connectDb = async () => {
     await sequelize.sync({
       force: false,
       logging: false,
-      alter: true,
     });
     console.log("All models were synchronized successfully.");
     return;
