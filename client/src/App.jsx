@@ -8,6 +8,7 @@ import ForgotPassword from "./components/Forgotpassword";
 import Home from "./components/Home";
 import AppLayout from "./components/AppLayout";
 import AddProduct from "./components/AddProduct";
+import Product from "./components/Product";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: "/add-product",
         element: <AddProduct />,
+      },
+      {
+        path: "/products",
+        element: <Product />,
       },
     ],
   },

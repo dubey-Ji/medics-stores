@@ -568,7 +568,7 @@ const AddProduct = function () {
                     }}
                     className="w-[100%] py-[8px] pl-[16px] pr-[40px] text-[0.8rem] leading-5 font-[400] border-[1px] border-[#cbd0dd] rounded-[0.375rem] bg-[#fff]"
                   >
-                    <option>--Please chosse an option--</option>
+                    <option>-- Please choose an option --</option>
                     {categories.map((category) => (
                       <option
                         value={category.name.toLowerCase()}
@@ -624,7 +624,7 @@ const AddProduct = function () {
                     }}
                     className="w-[100%] py-[8px] pl-[16px] pr-[40px] text-[0.8rem] leading-5 font-[400] border-[1px] border-[#cbd0dd] rounded-[0.375rem] bg-[#fff]"
                   >
-                    <option>--Please chosse an option--</option>
+                    <option>-- Please choose an option --</option>
                     {vendors.map((vendor) => (
                       <option value={vendor.name.toLowerCase()} key={vendor.id}>
                         {vendor.name.toUpperCase()}
@@ -664,7 +664,7 @@ const AddProduct = function () {
               </div>
               <div className="select-tags-option mb-[1rem]">
                 <select className="w-[100%] py-[8px] pl-[16px] pr-[40px] text-[0.8rem] leading-5 font-[400] border-[1px] border-[#cbd0dd] rounded-[0.375rem] bg-[#fff]">
-                  <option>--Please chosse an option--</option>
+                  <option>-- Please choose an option --</option>
                 </select>
               </div>
             </div>

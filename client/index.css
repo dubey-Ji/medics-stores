@@ -102,3 +102,7 @@ hr::after {
   border-color: #cbd0dd; /* Border color */
   color: #141824;
 }
+
+.productactive {
+  color: "#141824";
+}
